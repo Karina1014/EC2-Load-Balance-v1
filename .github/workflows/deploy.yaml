@@ -21,37 +21,13 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
 
-    # 3. Construir y subir la imagen Docker con Nginx y el archivo HTML
+    # 3. Construir y subir la imagen Docker con Nginx y los archivos HTML y CSS
     - name: Build and Push Docker image
       run: |
-        # Crear un Dockerfile
-        echo "
-        # Usar la imagen base de Nginx
-        FROM nginx:latest
-
-        # Copiar el archivo HTML a la carpeta donde Nginx lo servirá
-        COPY public/ /usr/share/nginx/html/
-
-        # Exponer el puerto 80 para acceso HTTP
-        EXPOSE 80
-        " > Dockerfile
-
-        # Crear el directorio public con el archivo index.html
-        mkdir -p public
-        echo "<!DOCTYPE html>
-        <html>
-        <head>
-            <title>Servidor HTML</title>
-        </head>
-        <body>
-            <h1>Hola desde la instancia EC2 con Docker</h1>
-        </body>
-        </html>" > public/index.html
-
-        # Construir la imagen Docker
+        # Construir la imagen Docker utilizando el Dockerfile existente
         docker build -t ${{ secrets.DOCKER_USERNAME }}/mybalance:latest .
 
-        # Subir la imagen a Docker Hub
+        # Subir la imagen Docker a Docker Hub
         docker push ${{ secrets.DOCKER_USERNAME }}/mybalance:latest
 
     # 4. Conectarse a la instancia EC2 y desplegar el contenedor Docker
